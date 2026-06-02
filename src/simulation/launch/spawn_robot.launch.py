@@ -1,4 +1,4 @@
-"""Spawn the inspection robot in Gazebo."""
+"""Spawn the inspection robot in an already-running Gazebo simulation."""
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -8,7 +8,6 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    sim_pkg = get_package_share_directory('inspection_simulation')
     robot_desc_pkg = get_package_share_directory('robot_description')
     xacro_file = os.path.join(robot_desc_pkg, 'urdf', 'inspection_robot.urdf.xacro')
 
@@ -40,7 +39,7 @@ def generate_launch_description():
                 '-x', LaunchConfiguration('x'),
                 '-y', LaunchConfiguration('y'),
                 '-Y', LaunchConfiguration('yaw'),
-                '-z', '0.1',
+                '-z', '0.15',
             ],
         ),
     ])

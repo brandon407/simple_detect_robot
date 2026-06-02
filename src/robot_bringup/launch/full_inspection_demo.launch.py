@@ -10,10 +10,12 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
-    DeclareLaunchArgument, SetEnvironmentVariable, TimerAction
+    DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable, TimerAction
 )
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -39,17 +41,14 @@ def generate_launch_description():
             os.path.join(sim_pkg, 'models') + ':${GAZEBO_MODEL_PATH}'),
 
         # ===== Layer 1: Simulation =====
-        Node(
-            package='gazebo_ros', executable='gzserver', name='gazebo_server',
-            output='screen',
-            arguments=['-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_file],
-        ),
-        Node(
-            package='gazebo_ros', executable='gzclient', name='gazebo_client', output='screen',
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                FindPackageShare('gazebo_ros'), '/launch/gazebo.launch.py']),
+            launch_arguments={'world': world_file}.items(),
         ),
 
         # ===== Layer 2: Robot (delayed for Gazebo init) =====
-        TimerAction(period=3.0, actions=[
+        TimerAction(period=5.0, actions=[
             Node(package='robot_state_publisher', executable='robot_state_publisher',
                  name='robot_state_publisher', output='screen',
                  parameters=[{'robot_description': ['xacro ', xacro_file], 'use_sim_time': use_sim_time}]),
