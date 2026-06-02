@@ -46,7 +46,7 @@ nav2_params:
           stateful: true
 
         FollowPath:
-          plugin: "nav2_dwb_controller/DwbController"
+          plugin: "dwb_core::DWBLocalPlanner"
           debug_trajectory_details: true
           min_vel_x: 0.0
           max_vel_x: 0.5
@@ -62,12 +62,18 @@ nav2_params:
           yaw_goal_tolerance: 0.25
           transform_tolerance: 0.1
           critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-          BaseObstacle.scale: 0.02
-          PathAlign.scale: 32.0
-          PathDist.scale: 32.0
-          GoalAlign.scale: 24.0
-          GoalDist.scale: 24.0
-          RotateToGoal.scale: 32.0
+          BaseObstacle:
+            scale: 0.02
+          PathAlign:
+            scale: 32.0
+          PathDist:
+            scale: 32.0
+          GoalAlign:
+            scale: 24.0
+          GoalDist:
+            scale: 24.0
+          RotateToGoal:
+            scale: 32.0
 
     # Behavior tree
     behavior_server:

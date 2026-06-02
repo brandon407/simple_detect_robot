@@ -10,7 +10,7 @@ from launch.actions import (
     DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable, TimerAction
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -38,14 +38,14 @@ def generate_launch_description():
         launch_arguments={'world': world_file, 'extra_gazebo_args': '--verbose'}.items(),
     )
 
-    # Robot state publisher
+    # Robot state publisher — use Command substitution for xacro processing
     robot_state_pub = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
         parameters=[{
-            'robot_description': ['xacro ', xacro_file],
+            'robot_description': Command(['xacro ', xacro_file]),
             'use_sim_time': use_sim_time,
         }],
     )
