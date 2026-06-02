@@ -123,6 +123,8 @@ def generate_launch_description():
                               description='Pre-built map file for localization mode'),
 
         SetEnvironmentVariable(
+            'GAZEBO_PLUGIN_PATH', '/opt/ros/humble/lib'),
+        SetEnvironmentVariable(
             'GAZEBO_MODEL_PATH',
             os.path.join(sim_pkg, 'models') + ':${GAZEBO_MODEL_PATH}'),
 

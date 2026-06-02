@@ -13,6 +13,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         SetEnvironmentVariable(
+            'GAZEBO_PLUGIN_PATH', '/opt/ros/humble/lib'),
+        SetEnvironmentVariable(
             'GAZEBO_MODEL_PATH',
             os.path.join(sim_pkg, 'models') + ':${GAZEBO_MODEL_PATH}'),
 

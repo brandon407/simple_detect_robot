@@ -182,7 +182,12 @@
       <pose>5.2 -3.15 0.2 0 0 0</pose>
       <link name="link">
         <visual name="visual">
-          <geometry><cylinder radius="0.04" length="0.4"/></geometry>
+          <geometry>
+            <cylinder>
+              <radius>0.04</radius>
+              <length>0.4</length>
+            </cylinder>
+          </geometry>
           <material><ambient>0.3 0.3 0.3 1.0</ambient></material>
         </visual>
       </link>
@@ -259,13 +264,23 @@
       <pose>-4 1.2 0.8 0 0 0</pose>
       <link name="link">
         <visual name="visual">
-          <geometry><cylinder radius="0.08" length="1.5"/></geometry>
+          <geometry>
+            <cylinder>
+              <radius>0.08</radius>
+              <length>1.5</length>
+            </cylinder>
+          </geometry>
           <material>
             <ambient>0.6 0.6 0.6 1.0</ambient>
           </material>
         </visual>
         <collision name="collision">
-          <geometry><cylinder radius="0.08" length="1.5"/></geometry>
+          <geometry>
+            <cylinder>
+              <radius>0.08</radius>
+              <length>1.5</length>
+            </cylinder>
+          </geometry>
         </collision>
       </link>
     </model>

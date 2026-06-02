@@ -37,6 +37,8 @@ def generate_launch_description():
         DeclareLaunchArgument('use_sim_time', default_value='true'),
 
         SetEnvironmentVariable(
+            'GAZEBO_PLUGIN_PATH', '/opt/ros/humble/lib'),
+        SetEnvironmentVariable(
             'GAZEBO_MODEL_PATH',
             os.path.join(sim_pkg, 'models') + ':${GAZEBO_MODEL_PATH}'),
 
