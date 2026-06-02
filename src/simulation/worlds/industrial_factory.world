@@ -1,0 +1,338 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="industrial_factory">
+
+    <!-- ===== Physics ===== -->
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <!-- ===== Global Light ===== -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- ===== Ground Plane ===== -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>50 50</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>50 50</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1.0</ambient>
+            <diffuse>0.5 0.5 0.5 1.0</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Factory Walls ===== -->
+    <!-- North Wall -->
+    <model name="north_wall">
+      <static>true</static>
+      <pose>0 6 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>14 0.2 2.5</size></box></geometry>
+          <material>
+            <ambient>0.8 0.8 0.75 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>14 0.2 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- South Wall -->
+    <model name="south_wall">
+      <static>true</static>
+      <pose>0 -6 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>14 0.2 2.5</size></box></geometry>
+          <material>
+            <ambient>0.8 0.8 0.75 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>14 0.2 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- East Wall -->
+    <model name="east_wall">
+      <static>true</static>
+      <pose>7 0 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.2 12 2.5</size></box></geometry>
+          <material>
+            <ambient>0.8 0.8 0.75 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.2 12 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- West Wall with door opening -->
+    <model name="west_wall_north">
+      <static>true</static>
+      <pose>-7 3 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.2 6 2.5</size></box></geometry>
+          <material>
+            <ambient>0.8 0.8 0.75 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.2 6 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="west_wall_south">
+      <static>true</static>
+      <pose>-7 -3 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.2 6 2.5</size></box></geometry>
+          <material>
+            <ambient>0.8 0.8 0.75 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.2 6 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- ===== Interior Pillars ===== -->
+    <model name="pillar_ne">
+      <static>true</static>
+      <pose>3 2.5 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.3 0.3 2.5</size></box></geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.3 0.3 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="pillar_nw">
+      <static>true</static>
+      <pose>-3 2.5 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.3 0.3 2.5</size></box></geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.3 0.3 2.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- ===== Conveyor Belt Area (产线质检区: x~3 to 5, y~-3) ===== -->
+    <model name="conveyor_belt">
+      <static>true</static>
+      <pose>4.5 -3 0.4 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2.5 0.6 0.8</size></box></geometry>
+          <material>
+            <ambient>0.3 0.35 0.4 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>2.5 0.6 0.8</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Conveyor legs -->
+    <model name="conveyor_leg_fr">
+      <static>true</static>
+      <pose>5.2 -3.15 0.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><cylinder radius="0.04" length="0.4"/></geometry>
+          <material><ambient>0.3 0.3 0.3 1.0</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Product samples on conveyor -->
+    <model name="product_sample_1">
+      <static>true</static>
+      <pose>4.0 -3 0.85 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.15 0.1 0.08</size></box></geometry>
+          <material>
+            <ambient>0.9 0.2 0.2 1.0</ambient>
+            <diffuse>0.9 0.2 0.2 1.0</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="product_sample_2">
+      <static>true</static>
+      <pose>4.5 -3 0.85 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.15 0.1 0.08</size></box></geometry>
+          <material>
+            <!-- Defective: scratch mark (different color) -->
+            <ambient>0.9 0.6 0.2 1.0</ambient>
+            <diffuse>0.9 0.6 0.2 1.0</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Equipment Area (设备巡检区: x~-3 to -4.5, y~-2 to 2) ===== -->
+    <!-- Equipment cabinet -->
+    <model name="equipment_cabinet">
+      <static>true</static>
+      <pose>-4 -1.5 1.0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.8 0.5 2.0</size></box></geometry>
+          <material>
+            <ambient>0.4 0.45 0.5 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.8 0.5 2.0</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Instrument panel (仪表盘) -->
+    <model name="instrument_panel">
+      <static>true</static>
+      <pose>-4 0 1.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.5 0.05 0.4</size></box></geometry>
+          <material>
+            <ambient>0.1 0.12 0.15 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.5 0.05 0.4</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Pipeline with valves -->
+    <model name="pipeline_horizontal">
+      <static>true</static>
+      <pose>-4 1.2 0.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><cylinder radius="0.08" length="1.5"/></geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1.0</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><cylinder radius="0.08" length="1.5"/></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- ===== Safety Zone (安全巡检区: x~2 to 5, y~2 to 5) ===== -->
+    <!-- Safety fence -->
+    <model name="safety_fence_n">
+      <static>true</static>
+      <pose>3.5 3.5 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>3.0 0.03 1.0</size></box></geometry>
+          <material>
+            <ambient>1.0 0.8 0.0 0.6</ambient>
+            <diffuse>1.0 0.8 0.0 0.6</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>3.0 0.03 1.0</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="safety_fence_e">
+      <static>true</static>
+      <pose>5 2 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.03 3.0 1.0</size></box></geometry>
+          <material>
+            <ambient>1.0 0.8 0.0 0.6</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.03 3.0 1.0</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Safety sign -->
+    <model name="safety_sign">
+      <static>true</static>
+      <pose>4.25 3.5 1.3 0 0 3.1416</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.3 0.01 0.2</size></box></geometry>
+          <material>
+            <ambient>1.0 0.0 0.0 1.0</ambient>
+            <diffuse>1.0 0.0 0.0 1.0</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Floor markings for walkways -->
+    <model name="walkway_line">
+      <static>true</static>
+      <pose>0 0 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>8 2 0.005</size></box></geometry>
+          <material>
+            <ambient>0.2 0.8 0.2 0.3</ambient>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="inspection_robot">
+
+  <xacro:include filename="macros.xacro"/>
+  <xacro:include filename="sensors.xacro"/>
+
+  <!-- ===== Design Parameters ===== -->
+  <xacro:property name="chassis_length" value="0.6"/>
+  <xacro:property name="chassis_width" value="0.4"/>
+  <xacro:property name="chassis_height" value="0.25"/>
+  <xacro:property name="wheel_radius" value="0.08"/>
+  <xacro:property name="wheel_width" value="0.04"/>
+  <xacro:property name="wheel_x" value="0.20"/>   <!-- wheel longitudinal offset -->
+  <xacro:property name="wheel_y" value="0.25"/>   <!-- wheel lateral offset from center -->
+  <xacro:property name="caster_radius" value="0.03"/>
+  <xacro:property name="caster_x" value="0.28"/>  <!-- caster longitudinal offset -->
+  <xacro:property name="ground_clearance" value="0.07"/>
+  <xacro:property name="base_mass" value="20.0"/>
+  <xacro:property name="wheel_mass" value="1.0"/>
+  <xacro:property name="caster_mass" value="0.3"/>
+
+  <!-- ===== Materials ===== -->
+  <material name="chassis_blue">
+    <color rgba="0.15 0.35 0.65 1.0"/>
+  </material>
+  <material name="wheel_black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <material name="caster_gray">
+    <color rgba="0.4 0.4 0.4 1.0"/>
+  </material>
+
+  <!-- ===== Base Link (world frame reference) ===== -->
+  <link name="base_link"/>
+
+  <!-- ===== Chassis ===== -->
+  <joint name="chassis_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis"/>
+    <origin xyz="0 0 ${wheel_radius + ground_clearance + chassis_height/2}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="chassis">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="chassis_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+    <xacro:box_inertial mass="${base_mass}" x="${chassis_length}" y="${chassis_width}" z="${chassis_height}"/>
+  </link>
+
+  <gazebo reference="chassis">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- ===== Left Wheel ===== -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="chassis"/>
+    <child link="left_wheel"/>
+    <origin xyz="${wheel_x} ${wheel_y} 0" rpy="${-pi/2} 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+
+  <link name="left_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_radius}" length="${wheel_width}"/>
+  </link>
+
+  <gazebo reference="left_wheel">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- ===== Right Wheel ===== -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="chassis"/>
+    <child link="right_wheel"/>
+    <origin xyz="${wheel_x} ${-wheel_y} 0" rpy="${-pi/2} 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit effort="100" velocity="100"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+
+  <link name="right_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_radius}" length="${wheel_width}"/>
+  </link>
+
+  <gazebo reference="right_wheel">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- ===== Front Caster ===== -->
+  <joint name="front_caster_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="front_caster"/>
+    <origin xyz="${caster_x} 0 ${-(chassis_height/2 - caster_radius)}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="front_caster">
+    <visual>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+      <material name="caster_gray"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:box_inertial mass="${caster_mass}" x="${2*caster_radius}" y="${2*caster_radius}" z="${2*caster_radius}"/>
+  </link>
+
+  <gazebo reference="front_caster">
+    <mu1>0.01</mu1>
+    <mu2>0.01</mu2>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <!-- ===== Rear Caster ===== -->
+  <joint name="rear_caster_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="rear_caster"/>
+    <origin xyz="${-caster_x} 0 ${-(chassis_height/2 - caster_radius)}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="rear_caster">
+    <visual>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+      <material name="caster_gray"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:box_inertial mass="${caster_mass}" x="${2*caster_radius}" y="${2*caster_radius}" z="${2*caster_radius}"/>
+  </link>
+
+  <gazebo reference="rear_caster">
+    <mu1>0.01</mu1>
+    <mu2>0.01</mu2>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <!-- ===== Sensors ===== -->
+  <xacro:rgbd_camera name="front_camera" parent="chassis"
+    xyz="${chassis_length/2 - 0.05} 0 ${chassis_height/4}"
+    rpy="0 0 0"
+    resolution_width="640" resolution_height="480" fps="30"/>
+
+  <xacro:lidar_2d name="lidar" parent="chassis"
+    xyz="0 0 ${chassis_height/2 + 0.05}"
+    rpy="0 0 0"
+    scan_samples="360" scan_range_min="0.15" scan_range_max="10.0"/>
+
+  <xacro:imu_sensor name="imu" parent="chassis"
+    xyz="0 0 0"
+    rpy="0 0 0"/>
+
+  <!-- ===== Gazebo Differential Drive Plugin ===== -->
+  <gazebo>
+    <plugin name="gazebo_ros_diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <ros>
+        <namespace>/</namespace>
+        <remapping>cmd_vel:=/cmd_vel</remapping>
+        <remapping>odom:=/odom</remapping>
+      </ros>
+
+      <!-- Wheel configuration -->
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+
+      <!-- Kinematics -->
+      <wheel_separation>${2 * wheel_y}</wheel_separation>
+      <wheel_diameter>${2 * wheel_radius}</wheel_diameter>
+      <max_wheel_torque>20.0</max_wheel_torque>
+      <max_wheel_acceleration>5.0</max_wheel_acceleration>
+
+      <!-- Odometry -->
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+
+      <!-- Update rate -->
+      <update_rate>50</update_rate>
+
+      <!-- Odometry topic -->
+      <odometry_topic>/odom</odometry_topic>
+    </plugin>
+  </gazebo>
+
+  <!-- ===== Static transforms ===== -->
+  <!-- Robot state publisher will publish /tf from URDF joints -->
+
+</robot>

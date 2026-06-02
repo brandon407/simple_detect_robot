@@ -1,0 +1,6 @@
+# Start an inspection task at current robot position
+string inspection_mode        # 'defect' | 'meter' | 'safety' | 'all'
+float32 duration_sec          # Max inspection duration (0 = single shot)
+---
+bool success
+string message                # Status message

@@ -1,0 +1,16 @@
+# Patrol mission action definition
+# Goal
+geometry_msgs/Pose[] waypoints  # Ordered inspection waypoints
+bool loop_mode                  # Continuously loop patrol
+float32 stay_duration           # Seconds to stay at each waypoint
+string[] inspection_modes       # Inspection mode per waypoint (empty = no inspection)
+---
+# Result
+bool success
+int32 waypoints_visited
+string summary                  # Brief patrol summary
+---
+# Feedback
+int32 current_waypoint          # Index of current/just-completed waypoint
+float32 distance_remaining      # Distance to next waypoint in meters
+string current_state            # 'navigating' | 'inspecting' | 'idle'

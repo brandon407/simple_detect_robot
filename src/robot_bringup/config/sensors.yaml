@@ -1,0 +1,17 @@
+sensors:
+  ros__parameters:
+    camera:
+      rgb_topic: "/camera/rgb"
+      depth_topic: "/camera/depth"
+      width: 640
+      height: 480
+      fps: 30
+      horizontal_fov: 60.0
+    lidar:
+      scan_topic: "/lidar/scan"
+      samples: 360
+      range_min: 0.15
+      range_max: 10.0
+    imu:
+      topic: "/imu/data"
+      rate: 100

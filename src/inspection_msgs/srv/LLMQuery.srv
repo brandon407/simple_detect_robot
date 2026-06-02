@@ -1,0 +1,8 @@
+# Query the LLM agent
+string query                  # User's natural language query
+string context                # Optional context (inspection results, robot state, etc.)
+sensor_msgs/Image[] images    # Optional images for multi-modal analysis
+---
+string response               # LLM response text
+bool success
+string error_message

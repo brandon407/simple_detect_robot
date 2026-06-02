@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===== Common Macros ===== -->
+
+  <!-- Inertial block macro -->
+  <xacro:macro name="box_inertial" params="mass x y z">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia
+        ixx="${mass * (y*y + z*z) / 12}"
+        iyy="${mass * (x*x + z*z) / 12}"
+        izz="${mass * (x*x + y*y) / 12}"
+        ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Cylinder inertial macro -->
+  <xacro:macro name="cylinder_inertial" params="mass radius length">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia
+        ixx="${mass * (3*radius*radius + length*length) / 12}"
+        iyy="${mass * (3*radius*radius + length*length) / 12}"
+        izz="${mass * radius*radius / 2}"
+        ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Gazebo color material macro -->
+  <xacro:macro name="gazebo_color" params="name rgba">
+    <gazebo reference="${name}">
+      <material>Gazebo/${rgba}</material>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,16 @@
+inspection:
+  ros__parameters:
+    use_sim_time: true
+    default_mode: "all"
+    inspection_timeout: 30.0
+    camera_frame: "front_camera_link"
+    image_topic: "/camera/rgb"
+    depth_topic: "/camera/depth"
+    alert:
+      min_confidence: 0.5
+      publish_annotated: true
+      save_to_disk: true
+      storage_path: "/tmp/inspection_data"
+    detectors:
+      auto_load: true
+      enabled_list: ["defect", "meter", "safety"]

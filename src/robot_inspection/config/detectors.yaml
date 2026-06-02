@@ -1,0 +1,35 @@
+defect_detector:
+  model_path: "models/yolov8n_defect.onnx"
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  image_size: [640, 640]
+  device: "cuda"
+  classes:
+    - scratch
+    - crack
+    - deformation
+    - stain
+    - missing_part
+
+meter_reader:
+  model_path: "models/meter_detection.onnx"
+  ocr_lang: "en"
+  use_angle_cls: true
+  digit_model: "models/meter_digit.onnx"
+  confidence_threshold: 0.6
+
+safety_checker:
+  model_path: "models/yolov8n_safety.onnx"
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  image_size: [640, 640]
+  device: "cuda"
+  classes:
+    - person
+    - helmet
+    - vest
+    - fire
+    - smoke
+  zone_intrusion:
+    enabled: true
+    zone_polygon: []
