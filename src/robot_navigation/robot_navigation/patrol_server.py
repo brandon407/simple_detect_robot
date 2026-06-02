@@ -81,11 +81,13 @@ class PatrolServer(Node):
         self._cancel_requested = False
         request = goal_handle.request
 
-        # Start patrol
+        # Start patrol with inspection integration
+        inspection_modes = list(request.inspection_modes) if request.inspection_modes else []
         success = self._patrol.start_patrol(
             waypoints=list(request.waypoints),
             loop_mode=request.loop_mode,
             stay_duration=request.stay_duration,
+            inspection_modes=inspection_modes,
         )
 
         if not success:

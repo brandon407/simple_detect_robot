@@ -16,6 +16,7 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 from geometry_msgs.msg import PoseStamped, Pose
 from nav2_msgs.action import NavigateToPose
 from nav_msgs.msg import Odometry
+from std_srvs.srv import Trigger
 from tf2_ros import Buffer, TransformListener
 
 
@@ -45,6 +46,14 @@ class WaypointPatrol(Node):
         # Odom subscriber for distance estimation
         self._odom_sub = self.create_subscription(
             Odometry, '/odom', self._odom_callback, 10)
+
+        # Inspection integration
+        self._inspection_client = self.create_client(
+            Trigger, '/inspection/start')
+        self._inspection_stop_client = self.create_client(
+            Trigger, '/inspection/stop')
+        self._inspection_modes: list[str] = []  # Per-waypoint inspection mode
+        self._inspection_enabled = False
 
         # State
         self._state = PatrolState.IDLE
@@ -87,13 +96,15 @@ class WaypointPatrol(Node):
     # ── Public API ──────────────────────────────────────────────
 
     def start_patrol(self, waypoints: list[Pose], loop_mode: bool = False,
-                     stay_duration: float = 5.0) -> bool:
+                     stay_duration: float = 5.0,
+                     inspection_modes: list[str] | None = None) -> bool:
         """Start a new patrol mission.
 
         Args:
             waypoints: Ordered list of target poses.
             loop_mode: If True, continuously loop through waypoints.
             stay_duration: Seconds to pause at each waypoint.
+            inspection_modes: Per-waypoint inspection type (empty=no inspection).
 
         Returns:
             True if patrol started successfully.
@@ -109,12 +120,15 @@ class WaypointPatrol(Node):
         self._waypoints = list(waypoints)
         self._loop_mode = loop_mode
         self._stay_duration = stay_duration
+        self._inspection_modes = list(inspection_modes) if inspection_modes else []
+        self._inspection_enabled = bool(self._inspection_modes)
         self._current_idx = 0
         self._state = PatrolState.IDLE
 
         self.get_logger().info(
             f'Starting patrol: {len(waypoints)} waypoints, '
-            f'loop={loop_mode}, stay={stay_duration}s')
+            f'loop={loop_mode}, stay={stay_duration}s, '
+            f'inspection={self._inspection_enabled}')
 
         self._navigate_to_next()
         return True
@@ -213,9 +227,32 @@ class WaypointPatrol(Node):
             self._current_goal_handle = None
 
     def _on_stay_complete(self):
-        """Proceed to next waypoint after stay duration."""
+        """Proceed to next waypoint after stay duration and inspection."""
+        # Trigger inspection if enabled for this waypoint
+        if self._inspection_enabled and self._current_idx < len(self._inspection_modes):
+            mode = self._inspection_modes[self._current_idx]
+            if mode and mode != 'none':
+                self._trigger_inspection(mode)
+
         self._current_idx += 1
         self._navigate_to_next()
+
+    def _trigger_inspection(self, mode: str):
+        """Trigger an inspection task at the current waypoint.
+
+        Args:
+            mode: Inspection mode ('defect', 'meter', 'safety', 'all').
+        """
+        if not self._inspection_client.wait_for_service(timeout_sec=2.0):
+            self.get_logger().warn('Inspection service not available')
+            return
+
+        # Start inspection (fire-and-forget for now)
+        req = Trigger.Request()
+        self.get_logger().info(f'Triggering inspection (mode={mode})')
+        future = self._inspection_client.call_async(req)
+        future.add_done_callback(
+            lambda f: self.get_logger().debug('Inspection started') if f.result() else None)
 
     def _cancel_current_goal(self):
         """Cancel the active navigation goal."""

@@ -29,6 +29,7 @@ setup(
             'slam_manager = robot_navigation.slam_manager:main',
             'navigation_manager = robot_navigation.navigation_manager:main',
             'patrol_cli = robot_navigation.patrol_cli:main',
+            'inspection_demo = robot_navigation.inspection_demo:main',
         ],
     },
 )
