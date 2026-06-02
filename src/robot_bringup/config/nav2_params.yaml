@@ -46,34 +46,23 @@ nav2_params:
           stateful: true
 
         FollowPath:
-          plugin: "dwb_core::DWBLocalPlanner"
-          debug_trajectory_details: true
-          min_vel_x: 0.0
-          max_vel_x: 0.5
-          max_vel_theta: 1.0
-          min_speed_xy: 0.0
-          max_speed_xy: 0.5
-          min_speed_theta: 0.0
-          acc_lim_x: 1.0
-          acc_lim_theta: 2.0
-          decel_lim_x: -1.0
-          decel_lim_theta: -2.0
-          xy_goal_tolerance: 0.25
-          yaw_goal_tolerance: 0.25
+          plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+          desired_linear_vel: 0.4
+          max_linear_vel: 0.5
+          min_linear_vel: 0.05
+          max_angular_vel: 1.0
+          min_approach_linear_velocity: 0.1
+          lookahead_dist: 0.5
           transform_tolerance: 0.1
-          critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-          BaseObstacle:
-            scale: 0.02
-          PathAlign:
-            scale: 32.0
-          PathDist:
-            scale: 32.0
-          GoalAlign:
-            scale: 24.0
-          GoalDist:
-            scale: 24.0
-          RotateToGoal:
-            scale: 32.0
+          use_velocity_scaled_lookahead_dist: true
+          min_lookahead_dist: 0.3
+          max_lookahead_dist: 1.0
+          use_cost_regulated_linear_velocity_scaling: true
+          cost_scaling_dist: 0.5
+          cost_scaling_gain: 1.0
+          regulated_linear_scaling_min_radius: 0.5
+          regulated_linear_scaling_min_speed: 0.1
+          use_fixed_curvature_lookahead: false
 
     # Behavior tree
     behavior_server:
@@ -97,14 +86,19 @@ nav2_params:
           width: 3
           height: 3
           resolution: 0.05
-          plugins: ["obstacle_layer", "inflation_layer"]
+          plugins: ["voxel_layer", "inflation_layer"]
           inflation_layer:
             plugin: "nav2_costmap_2d::InflationLayer"
             cost_scaling_factor: 3.0
             inflation_radius: 0.55
-          obstacle_layer:
-            plugin: "nav2_costmap_2d::ObstacleLayer"
+          voxel_layer:
+            plugin: "nav2_costmap_2d::VoxelLayer"
             enabled: true
+            publish_voxel_map: false
+            origin_z: 0.0
+            z_resolution: 0.2
+            z_voxels: 10
+            max_obstacle_height: 2.0
             observation_sources: laser_scan
             laser_scan:
               topic: /lidar/scan
