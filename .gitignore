@@ -1,0 +1,37 @@
+# ROS2 / colcon
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.eggs/
+dist/
+.venv/
+venv/
+
+# Model files (large binaries)
+*.onnx
+*.pth
+*.pt
+*.engine
+*.trt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+*.local.yaml
