@@ -27,6 +27,8 @@ setup(
             'patrol_server = robot_navigation.patrol_server:main',
             'waypoint_patrol = robot_navigation.waypoint_patrol:main',
             'slam_manager = robot_navigation.slam_manager:main',
+            'navigation_manager = robot_navigation.navigation_manager:main',
+            'patrol_cli = robot_navigation.patrol_cli:main',
         ],
     },
 )
